@@ -79,6 +79,46 @@ class SheetDAO {
   }
 
   /**
+   * 複数のレコードを一括で追加します。IDは自動採番されます。
+   * @param {Object[]} dataList オブジェクトの配列
+   * @returns {Object[]} 追加された全レコード（ID付き）
+   */
+  addAll(dataList) {
+    if (!dataList || dataList.length === 0) {
+      return [];
+    }
+
+    const lock = LockService.getScriptLock();
+    try {
+      // 最大30秒待機
+      lock.waitLock(30000);
+
+      const lastRow = this.sheet.getLastRow();
+      const idKey = this.headers[0];
+
+      const lastId =
+        lastRow <= 1 ? 0 : this.sheet.getRange(lastRow, 1).getValue();
+
+      const newRecords = [];
+      let currentId = Number(lastId) || 0;
+      const rowValues = dataList.map((data) => {
+        currentId++;
+        const newRecord = { [idKey]: currentId, ...data };
+        newRecords.push(newRecord);
+        return this._toRowArray(newRecord);
+      });
+
+      this.sheet
+        .getRange(lastRow + 1, 1, rowValues.length, this.lastCol)
+        .setValues(rowValues);
+
+      return newRecords;
+    } finally {
+      lock.releaseLock();
+    }
+  }
+
+  /**
    * 指定したIDのレコードを更新します。
    * @param {number|string} id
    * @param {Object} data 更新するプロパティーを含むオブジェクト
