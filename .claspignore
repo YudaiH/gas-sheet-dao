@@ -1,0 +1,11 @@
+**/*
+
+!src/**/*.js
+!src/**/*.gs
+!src/appsscript.json
+
+node_modules/
+.git/
+README.md
+.clasp.json
+.clasprc.json
