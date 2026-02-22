@@ -1,5 +1,4 @@
 /**
-<<<<<<< HEAD
  * SheetDAOのインスタンスを作成します。
  * 外部プロジェクトからライブラリとして使用する場合、この関数を経由して呼び出します。
  * @param {string} sheetId スプレッドシートのID
@@ -11,8 +10,6 @@ function create(sheetId, sheetName) {
 }
 
 /**
-=======
->>>>>>> origin/develop
  * SheetDAO: Google Spread Sheet をDBのように操作するためのDAOクラス
  */
 class SheetDAO {
